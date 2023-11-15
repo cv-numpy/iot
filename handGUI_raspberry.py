@@ -8,8 +8,8 @@ LINE_SIZE = LENGTH // 120
 import numpy as np
 import cv2 as cv
 
-# from adafruit_servokit import ServoKit
-# kit = ServoKit(channels=16)
+from adafruit_servokit import ServoKit
+kit = ServoKit(channels=16)
 
 servo_num = 5
 angle_locations = [0] * servo_num
@@ -134,7 +134,7 @@ def update_angles(servokit, index, change_of_angle):
     new_angle = old_angle + change_of_angle
     angle_locations[index] = new_angle
 
-    servokit[index] = new_angle
+    servokit.servo[index].angle = new_angle
 
 value_for_update = 10
 
@@ -149,12 +149,12 @@ def opencv_callback(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDOWN:
         image_for_showing = redshift_finger[index]
         if angle_locations[index] <= 180 - value_for_update:
-            update_angles(index, value_for_update)
+            update_angles(kit, index, value_for_update)
         print('angles updated: ' + str(angle_locations))
     if event == cv.EVENT_RBUTTONDOWN:
         image_for_showing = blueshift_finger[index]
         if angle_locations[index] >= value_for_update:
-            update_angles(index, -value_for_update)
+            update_angles(kit, index, -value_for_update)
         print('angles updated: ' + str(angle_locations))
 
 # Create hand Dashboard
